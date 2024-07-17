@@ -1,9 +1,11 @@
 """
 Country related functionality
 """
+from . import db
+import os
+from utils.constants import REPOSITORY_ENV_VAR
 
-
-class Country:
+class Country(db.Model):
     """
     Country representation
 
@@ -12,9 +14,12 @@ class Country:
     This class is used to get and list countries
     """
 
-    name: str
-    code: str
-    cities: list
+    __tablename__ = 'countries'
+
+    name = db.Column(db.String(128), unique=True)
+    code = db.Column(db.String(2), primary_key=True, unique=True)
+    cities = db.relationship("City", back_populates='country')
+
 
     def __init__(self, name: str, code: str, **kw) -> None:
         """Dummy init"""
@@ -38,7 +43,10 @@ class Country:
         """Get all countries"""
         from src.persistence import repo
 
-        countries: list["Country"] = repo.get_all("country")
+        if os.getenv(REPOSITORY_ENV_VAR) == "db":
+            countries: list["Country"] = repo.get_all(Country)
+        else:
+            countries: list["Country"] = repo.get_all("country")
 
         return countries
 
