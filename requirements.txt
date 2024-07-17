@@ -1,4 +1,9 @@
 flask
 flask-cors
-
+sqlalchemy
+flask-sqlalchemy
+flask-JWT-Extended
+flask-bcrypt
+python-dotenv
+mysqlclient
 gunicorn
